@@ -7,6 +7,7 @@ public class Book implements Borrowable {
     private String publisher;
     private int numberOfCopies;
     private Status status;
+    private Patron currentPatron;
 
     // Constructors. I've added an extra constructor for the case where the number
     // of available books is currently unknown.
@@ -19,6 +20,7 @@ public class Book implements Borrowable {
         this.publisher = publisher;
         this.numberOfCopies = numberOfCopies;
         this.status = status;
+        this.currentPatron = null;
     }
 
     public Book(String title, Author author, String isbn, String publisher, Status status) {
@@ -29,6 +31,7 @@ public class Book implements Borrowable {
         this.publisher = publisher;
         this.status = status;
         this.numberOfCopies = 0;
+        this.currentPatron = null;
     }
 
     // GETTERS
@@ -89,7 +92,11 @@ public class Book implements Borrowable {
     public void borrowBook(Patron patron) {
         if (status == Status.AVAILABLE) {
             status = Status.CHECKED_OUT;
-            // TODO: Add the book to the patron's list.
+            patron.addBorrowedBook(this);
+            currentPatron = patron;
+            System.out.println("Book borrowed successfully.");
+        } else {
+            System.out.println("Book is not available.");
         }
     }
 
@@ -97,7 +104,10 @@ public class Book implements Borrowable {
     public void returnBook() {
         if (status == Status.CHECKED_OUT) {
             status = Status.AVAILABLE;
-            // TODO: Remove the book from the patron's list.
+            currentPatron.removeBorrowedBook(this);
+            System.out.println("Book returned successfully.");
+        } else {
+            System.out.println("Book is not checked out.");
         }
     }
 
