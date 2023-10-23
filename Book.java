@@ -1,48 +1,35 @@
+// TODO: Do I need setters and getters for Status?
+
 public class Book implements Borrowable {
     private String title;
-    private String author;
+    private Author author;
     private String isbn;
     private String publisher;
     private int numberOfCopies;
     private Status status;
 
-    public Book(String title, String author, String isbn, String publisher, int numberOfCopies, Status status) {
+    // Constructors. I've added an extra constructor for the case where the number
+    // of available books is currently unknown.
+
+    public Book(String title, Author author, String isbn, String publisher, int numberOfCopies, Status status) {
         this.title = title;
         this.author = author;
+        author.addWrittenBook(this);
         this.isbn = isbn;
         this.publisher = publisher;
         this.numberOfCopies = numberOfCopies;
         this.status = status;
     }
-    // Implement these constructors once Status is defined!
 
-    // public Book(String title, String author, String isbn, String publisher, int
-    // numberOfCopies) {
-    // this.title = title;
-    // this.author = author;
-    // this.isbn = isbn;
-    // this.publisher = publisher;
-    // this.numberOfCopies = numberOfCopies;
-    // this.status =
-    // }
-
-    public Book(String title, String author, String isbn, String publisher, Status status) {
+    public Book(String title, Author author, String isbn, String publisher, Status status) {
         this.title = title;
         this.author = author;
+        author.addWrittenBook(this);
         this.isbn = isbn;
         this.publisher = publisher;
         this.status = status;
         this.numberOfCopies = 0;
     }
-
-    // public Book(String title, String author, String isbn, String publisher) {
-    // this.title = title;
-    // this.author = author;
-    // this.isbn = isbn;
-    // this.publisher = publisher;
-    // this.numberOfCopies = 0;
-    // this.status =
-    // }
 
     // GETTERS
 
@@ -50,7 +37,7 @@ public class Book implements Borrowable {
         return title;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
@@ -76,7 +63,7 @@ public class Book implements Borrowable {
         this.title = title;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 
@@ -98,15 +85,27 @@ public class Book implements Borrowable {
 
     // Add these Override methods once Status and Patron are defined!
 
-    // @Override
-    // public void borrowBook(Patron patron) {
-    // if (status == Status.AVAILABLE)
-    // }
+    @Override
+    public void borrowBook(Patron patron) {
+        if (status == Status.AVAILABLE) {
+            status = Status.CHECKED_OUT;
+            // TODO: Add the book to the patron's list.
+        }
+    }
+
+    @Override
+    public void returnBook() {
+        if (status == Status.CHECKED_OUT) {
+            status = Status.AVAILABLE;
+            // TODO: Remove the book from the patron's list.
+        }
+    }
 
     public String toString() {
         return "Book{" +
                 "title='" + title + '\'' +
-                ", author='" + author + '\'' +
+                // Author DOB and books written are irrelevant to the book itself.
+                ", author='" + author.getName() + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
                 ", numberOfCopies=" + numberOfCopies +
