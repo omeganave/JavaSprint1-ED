@@ -1,3 +1,6 @@
+// Only used for overdue books. Not used yet. DO THIS IN THE FUTURE.
+// import java.util.Date;
+
 public class Book implements Borrowable {
     // Instance variables for the book.
     private String title;
@@ -9,6 +12,8 @@ public class Book implements Borrowable {
     private int numberOfCopies;
     private int copiesBorrowed;
     private Status status;
+    // UNCOMMENT WHEN DOING OVERDUE SYSTEM.
+    // private Date dueDate;
 
     // Both constructors call the Author's addWrittenBook method to add the book to
     // the author's list of books written automatically.

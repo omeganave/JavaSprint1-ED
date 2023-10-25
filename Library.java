@@ -5,6 +5,8 @@ public class Library {
     private ArrayList<Book> books;
     private ArrayList<Patron> patrons;
     private ArrayList<Author> authors;
+    // Used for overdue books. Not used yet. DO THIS IN THE FUTURE.
+    // private int BORROW_DURATION_DAYS = 14;
 
     // Basic constructor for the library. Assumes that there are no books, patrons,
     // or authors yet, so creates empty lists for all three.
