@@ -1,5 +1,5 @@
 public interface Borrowable {
     void borrowBook(Patron patron);
 
-    void returnBook();
+    void returnBook(Patron patron);
 }

@@ -25,8 +25,12 @@ public class Patron {
         return phoneNumber;
     }
 
-    public ArrayList<Book> getBorrowedBooks() {
-        return borrowedBooks;
+    public String getBorrowedBooks() {
+        ArrayList<String> bookTitles = new ArrayList<>();
+        for (Book book : borrowedBooks) {
+            bookTitles.add(book.getTitle());
+        }
+        return this.name + ": " + bookTitles;
     }
 
     public void setName(String name) {
@@ -47,6 +51,15 @@ public class Patron {
 
     public void removeBorrowedBook(Book book) {
         borrowedBooks.remove(book);
+    }
+
+    public boolean hasBorrowedBook(Book book) {
+        for (Book b : borrowedBooks) {
+            if (b.equals(book)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString() {

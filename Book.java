@@ -1,13 +1,11 @@
-// TODO: Do I need setters and getters for Status?
-
 public class Book implements Borrowable {
     private String title;
     private Author author;
     private String isbn;
     private String publisher;
     private int numberOfCopies;
+    private int copiesBorrowed;
     private Status status;
-    private Patron currentPatron;
 
     // Constructors. I've added an extra constructor for the case where the number
     // of available books is currently unknown.
@@ -20,7 +18,7 @@ public class Book implements Borrowable {
         this.publisher = publisher;
         this.numberOfCopies = numberOfCopies;
         this.status = status;
-        this.currentPatron = null;
+        this.copiesBorrowed = 0;
     }
 
     public Book(String title, Author author, String isbn, String publisher, Status status) {
@@ -31,7 +29,7 @@ public class Book implements Borrowable {
         this.publisher = publisher;
         this.status = status;
         this.numberOfCopies = 0;
-        this.currentPatron = null;
+        this.copiesBorrowed = 0;
     }
 
     // GETTERS
@@ -54,6 +52,10 @@ public class Book implements Borrowable {
 
     public int getNumberOfCopies() {
         return numberOfCopies;
+    }
+
+    public int getCopiesBorrowed() {
+        return copiesBorrowed;
     }
 
     public Status getStatus() {
@@ -82,32 +84,33 @@ public class Book implements Borrowable {
         this.numberOfCopies = numberOfCopies;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    // Add these Override methods once Status and Patron are defined!
-
     @Override
     public void borrowBook(Patron patron) {
-        if (status == Status.AVAILABLE) {
-            status = Status.CHECKED_OUT;
+        if (status == Status.AVAILABLE && patron.hasBorrowedBook(this) == false) {
             patron.addBorrowedBook(this);
-            currentPatron = patron;
+            copiesBorrowed += 1;
+            if (copiesBorrowed == numberOfCopies) {
+                status = Status.CHECKED_OUT;
+            }
             System.out.println("Book borrowed successfully.");
+        } else if (patron.hasBorrowedBook(this) == true) {
+            System.out.println("Book is already borrowed.");
         } else {
             System.out.println("Book is not available.");
         }
     }
 
     @Override
-    public void returnBook() {
-        if (status == Status.CHECKED_OUT) {
-            status = Status.AVAILABLE;
-            currentPatron.removeBorrowedBook(this);
+    public void returnBook(Patron patron) {
+        if (patron.hasBorrowedBook(this) == true) {
+            patron.removeBorrowedBook(this);
+            copiesBorrowed -= 1;
+            if (status == Status.CHECKED_OUT) {
+                status = Status.AVAILABLE;
+            }
             System.out.println("Book returned successfully.");
         } else {
-            System.out.println("Book is not checked out.");
+            System.out.println("Book is not checked out by this patron.");
         }
     }
 
@@ -118,7 +121,8 @@ public class Book implements Borrowable {
                 ", author='" + author.getName() + '\'' +
                 ", isbn='" + isbn + '\'' +
                 ", publisher='" + publisher + '\'' +
-                ", numberOfCopies=" + numberOfCopies +
+                ", numberOfCopies=" + numberOfCopies + '\'' +
+                ", copiesBorrowed=" + copiesBorrowed + '\'' +
                 ", status=" + status +
                 '}';
     }

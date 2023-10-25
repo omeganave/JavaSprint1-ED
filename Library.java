@@ -87,6 +87,7 @@ public class Library {
         }
     }
 
+    // TODO: Multiple arguments for adding and removing.
     public void removeBook(Book book) {
         books.remove(book);
     }
@@ -111,8 +112,8 @@ public class Library {
         book.borrowBook(patron);
     }
 
-    public void returnBook(Book book) {
-        book.returnBook();
+    public void returnBook(Book book, Patron patron) {
+        book.returnBook(patron);
     }
 
     public String toString() {
