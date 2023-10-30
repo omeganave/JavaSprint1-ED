@@ -1,3 +1,5 @@
+// AUTHOR CLASS IS FINISHED. NO CHANGES TO BE MADE.
+
 import java.util.Date;
 import java.util.ArrayList;
 
