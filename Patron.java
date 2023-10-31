@@ -1,6 +1,7 @@
 // NEED TO ADD OVERDUE SYSTEM.
 
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Patron {
     // Instance variables for the patron's name, address, phone number and list of
@@ -8,7 +9,7 @@ public class Patron {
     private String name;
     private String address;
     private String phoneNumber;
-    private ArrayList<Book> borrowedBooks;
+    private Map<Book, Integer> borrowedBooks;
 
     // Constructor for the patron. Assumes that the list of borrowed books is empty,
     // and sets it to an empty list.
@@ -16,7 +17,7 @@ public class Patron {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.borrowedBooks = new ArrayList<>();
+        this.borrowedBooks = new HashMap<>();
     }
 
     // Getters.
@@ -35,13 +36,13 @@ public class Patron {
 
     // Gets the list of borrowed books. Returns a string of the titles of the books
     // the patron has borrowed.
-    public String getBorrowedBooks() {
-        ArrayList<String> bookTitles = new ArrayList<>();
-        for (Book book : borrowedBooks) {
-            bookTitles.add(book.getTitle());
-        }
-        return this.name + ": " + bookTitles;
-    }
+    // public String getBorrowedBooks() {
+    // ArrayList<String> bookTitles = new ArrayList<>();
+    // for (Book book : borrowedBooks) {
+    // bookTitles.add(book.getTitle());
+    // }
+    // return this.name + ": " + bookTitles;
+    // }
 
     // Setters.
 
@@ -58,24 +59,31 @@ public class Patron {
     }
 
     // Adds a book to the patron's list of borrowed books.
-    public void addBorrowedBook(Book book) {
-        borrowedBooks.add(book);
+    public void borrowBook(Book book, int numCopies) {
+        if (book.borrowBook(numCopies)) {
+            int currentCopies = borrowedBooks.getOrDefault(book, 0);
+            borrowedBooks.put(book, currentCopies + numCopies);
+            System.out.println("Book(s) borrowed successfully.");
+        } else {
+            System.out.println("Not enough copies available. " + book.getNumberOfCopies() + " copies available.");
+        }
     }
 
     // Removes a book from the patron's list of borrowed books.
-    public void removeBorrowedBook(Book book) {
-        borrowedBooks.remove(book);
-    }
-
-    // Returns true if the given book is in the patron's list of borrowed books.
-    // Returns false otherwise.
-    public boolean hasBorrowedBook(Book book) {
-        for (Book b : borrowedBooks) {
-            if (b.equals(book)) {
-                return true;
+    public void returnBook(Book book, int numCopies) {
+        int currentCopies = borrowedBooks.getOrDefault(book, 0);
+        if (currentCopies >= numCopies) {
+            book.returnBook(numCopies);
+            int updatedCopies = currentCopies - numCopies;
+            if (updatedCopies > 0) {
+                borrowedBooks.put(book, updatedCopies);
+            } else {
+                borrowedBooks.remove(book);
             }
+            System.out.println("Book(s) returned successfully.");
+        } else {
+            System.out.println("Trying to return too many copies. Only " + currentCopies + " copies available.");
         }
-        return false;
     }
 
     // Returns a string representation of the patron.

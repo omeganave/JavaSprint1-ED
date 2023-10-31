@@ -1,18 +1,19 @@
 // AUTHOR CLASS IS FINISHED. NO CHANGES TO BE MADE.
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
 import java.util.ArrayList;
 
 public class Author {
     // Instance variables for the author's name, date of birth, and list of books
     // written.
     private String name;
-    private Date dateOfBirth;
-    private ArrayList<Book> booksWritten;
+    private Calendar dateOfBirth;
+    private List<Book> booksWritten;
 
     // Constructor for the author. Assumes that the list of books written is empty,
     // and sets it to an empty list.
-    public Author(String name, Date dateOfBirth) {
+    public Author(String name, Calendar dateOfBirth) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.booksWritten = new ArrayList<>();
@@ -24,11 +25,11 @@ public class Author {
         return name;
     }
 
-    public Date getDateOfBirth() {
+    public Calendar getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public ArrayList<Book> getBooksWritten() {
+    public List<Book> getBooksWritten() {
         return booksWritten;
     }
 
@@ -38,7 +39,7 @@ public class Author {
         this.name = name;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Calendar dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 

@@ -1,7 +1,7 @@
 // DONE.
 
 public interface Borrowable {
-    void borrowBook(Patron patron);
+    boolean borrowBook(int numberOfCopiesToBorrow);
 
-    void returnBook(Patron patron);
+    void returnBook(int numberOfCopiesToReturn);
 }

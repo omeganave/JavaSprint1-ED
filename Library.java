@@ -1,14 +1,13 @@
 // NEED TO ADD OVERDUE SYSTEM.
 
+import java.util.List;
 import java.util.ArrayList;
 
 public class Library {
     // Three lists. Books, Patrons, and Authors that are part of the library.
-    private ArrayList<Book> books;
-    private ArrayList<Patron> patrons;
-    private ArrayList<Author> authors;
-    // Used for overdue books. Not used yet. DO THIS IN THE FUTURE.
-    // private int BORROW_DURATION_DAYS = 14;
+    private List<Book> books;
+    private List<Patron> patrons;
+    private List<Author> authors;
 
     // Basic constructor for the library. Assumes that there are no books, patrons,
     // or authors yet, so creates empty lists for all three.
@@ -218,19 +217,19 @@ public class Library {
     //
     //
     // Borrow a book to a patron. Simply calls the book's borrowBook() method.
-    public void borrowBook(Book book, Patron patron) {
-        book.borrowBook(patron);
+    public void borrowBook(Book book, Patron patron, int numberOfCopies) {
+        patron.borrowBook(book, numberOfCopies);
     }
 
     // Return a book to a patron. Simply calls the book's returnBook() method.
-    public void returnBook(Book book, Patron patron) {
-        book.returnBook(patron);
+    public void returnBook(Book book, Patron patron, int numberOfCopies) {
+        patron.returnBook(book, numberOfCopies);
     }
 
     // Checks to see if a specified book is available to be borrowed.
     public void isBookAvailable(Book book) {
-        if (book.getStatus() == Status.AVAILABLE) {
-            System.out.println(book.getTitle() + " is available.");
+        if (book.getNumberOfCopies() > 0) {
+            System.out.println(book.getTitle() + " is available. " + book.getNumberOfCopies() + " copies available.");
         } else {
             System.out.println(book.getTitle() + " is not available.");
         }
