@@ -57,8 +57,19 @@ public class Test {
         // MAKE IT NOT ALLOW RETURNING OR BORROWING 0 COPIES.
         System.out.println(theSilmarillion);
 
-        System.out.println(robert);
+        // System.out.println(robert);
         // REARANGE THE TOSTRING METHOD TO LOOK BETTER.
+
+        System.out.println(theSilmarillion.getCopyStatuses());
+
+        library.borrowBook(lotrFellowshipOfTheRing, robert, 2);
+        System.out.println(lotrFellowshipOfTheRing.getCopyStatuses());
+        library.borrowBook(lotrFellowshipOfTheRing, will, 2);
+        System.out.println(lotrFellowshipOfTheRing.getCopyStatuses());
+        library.returnBook(lotrFellowshipOfTheRing, robert, 1);
+        System.out.println(lotrFellowshipOfTheRing.getCopyStatuses());
+
+        will.displayBorrowedBooks();
 
         System.out.println(library);
     }

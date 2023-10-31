@@ -1,7 +1,12 @@
 // NEED TO ADD OVERDUE SYSTEM.
 
 import java.util.Map;
+import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class Patron {
     // Instance variables for the patron's name, address, phone number and list of
@@ -9,7 +14,7 @@ public class Patron {
     private String name;
     private String address;
     private String phoneNumber;
-    private Map<Book, Integer> borrowedBooks;
+    private Map<BorrowedCopy, Calendar> borrowedBooks;
 
     // Constructor for the patron. Assumes that the list of borrowed books is empty,
     // and sets it to an empty list.
@@ -60,29 +65,51 @@ public class Patron {
 
     // Adds a book to the patron's list of borrowed books.
     public void borrowBook(Book book, int numCopies) {
-        if (book.borrowBook(numCopies)) {
-            int currentCopies = borrowedBooks.getOrDefault(book, 0);
-            borrowedBooks.put(book, currentCopies + numCopies);
-            System.out.println("Book(s) borrowed successfully.");
-        } else {
-            System.out.println("Not enough copies available. " + book.getNumberOfCopies() + " copies available.");
+        List<BookCopy> availableCopies = book.getCopies();
+        Calendar dueDate = calculateDueDate();
+
+        for (int i = 0; i < numCopies; i++) {
+            if (i < availableCopies.size()) {
+                BookCopy copyToBorrow = availableCopies.get(i);
+                BorrowedCopy borrowedCopy = new BorrowedCopy(book, copyToBorrow);
+                borrowedBooks.put(borrowedCopy, dueDate);
+                copyToBorrow.setStatus(Status.CHECKED_OUT);
+            }
         }
+        System.out.println("Books borrowed successfully.");
     }
 
     // Removes a book from the patron's list of borrowed books.
     public void returnBook(Book book, int numCopies) {
-        int currentCopies = borrowedBooks.getOrDefault(book, 0);
-        if (currentCopies >= numCopies) {
-            book.returnBook(numCopies);
-            int updatedCopies = currentCopies - numCopies;
-            if (updatedCopies > 0) {
-                borrowedBooks.put(book, updatedCopies);
-            } else {
-                borrowedBooks.remove(book);
+        Set<BorrowedCopy> copiesToReturn = new HashSet<>();
+
+        for (Map.Entry<BorrowedCopy, Calendar> entry : borrowedBooks.entrySet()) {
+            BorrowedCopy borrowedCopy = entry.getKey();
+            if (borrowedCopy.getBook() == book && numCopies > 0) {
+                copiesToReturn.add(borrowedCopy);
+                numCopies--;
             }
-            System.out.println("Book(s) returned successfully.");
-        } else {
-            System.out.println("Trying to return too many copies. Only " + currentCopies + " copies available.");
+        }
+
+        for (BorrowedCopy copy : copiesToReturn) {
+            borrowedBooks.remove(copy);
+            copy.getBookCopy().setStatus(Status.AVAILABLE);
+        }
+    }
+
+    private Calendar calculateDueDate() {
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.add(Calendar.DAY_OF_MONTH, 14);
+        return dueDate;
+    }
+
+    public void displayBorrowedBooks() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        for (Map.Entry<BorrowedCopy, Calendar> entry : borrowedBooks.entrySet()) {
+            BorrowedCopy borrowedCopy = entry.getKey();
+            Calendar dueDate = entry.getValue();
+            System.out.println(borrowedCopy.getBook().getTitle() + " due " + dateFormat.format(dueDate.getTime()));
+            System.out.println();
         }
     }
 
